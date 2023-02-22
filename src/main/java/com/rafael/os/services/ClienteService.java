@@ -1,10 +1,10 @@
 package com.rafael.os.services;
 
+import com.rafael.os.domain.Cliente;
 import com.rafael.os.domain.Pessoa;
-import com.rafael.os.domain.Tecnico;
-import com.rafael.os.dtos.TecnicoDTO;
+import com.rafael.os.dtos.ClienteDTO;
+import com.rafael.os.repositories.ClienteRepository;
 import com.rafael.os.repositories.PessoaRepository;
-import com.rafael.os.repositories.TecnicoRepository;
 import com.rafael.os.services.exceptions.DataIntegratyViolationException;
 import com.rafael.os.services.exceptions.ObjectNotFoundException;
 import jakarta.validation.Valid;
@@ -15,31 +15,31 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TecnicoService {
+public class ClienteService {
 
     @Autowired
-    private TecnicoRepository repository;
+    private ClienteRepository repository;
     @Autowired
     private PessoaRepository pessoaRepository;
-    public Tecnico findById(Integer id) {
-        Optional<Tecnico> obj = repository.findById(id);
+    public Cliente findById(Integer id) {
+        Optional<Cliente> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
-                "Objeto não encontrado! Id " + id + " Tipo: " + Tecnico.class.getName()));
+                "Objeto não encontrado! Id: " + id + " Tipo: " + Cliente.class.getName()));
     }
 
-    public List<Tecnico> findAll() {
+    public List<Cliente> findAll() {
         return repository.findAll();
     }
 
-    public Tecnico create(TecnicoDTO objDTO) {
+    public Cliente create(ClienteDTO objDTO) {
         if (findByCPF(objDTO) != null) {
             throw new DataIntegratyViolationException("CPF já cadastrado na base de dados.");
         }
         return null;
     }
 
-    public Tecnico update(Integer id, @Valid TecnicoDTO objDTO) {
-        Tecnico oldObj = findById(id);
+    public Cliente update(Integer id, @Valid ClienteDTO objDTO) {
+        Cliente oldObj = findById(id);
         if (findByCPF(objDTO) != null && findByCPF(objDTO).getId() != id){
             throw new DataIntegratyViolationException("CPF já cadastrado na base de dados.");
         }
@@ -50,7 +50,7 @@ public class TecnicoService {
     }
      //deleta tecnico por id
     public void delete(Integer id) {
-        Tecnico obj = findById(id);
+        Cliente obj = findById(id);
         if(obj.getList().size() > 0 ){
             throw new DataIntegratyViolationException("Técnico possui Ordens de Serviço, não pode ser deletado!");
         }
@@ -58,7 +58,7 @@ public class TecnicoService {
     }
 
     //busca tecnico pelo cpf
-    private Pessoa findByCPF(TecnicoDTO objDTO){
+    private Pessoa findByCPF(ClienteDTO objDTO){
         Pessoa obj = pessoaRepository.findByCPF(objDTO.getCpf());
         if (obj != null) {
             return obj;}
