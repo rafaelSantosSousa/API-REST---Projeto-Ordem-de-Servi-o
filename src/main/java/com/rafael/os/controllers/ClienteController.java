@@ -14,7 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/clientes")
 public class ClienteController {
